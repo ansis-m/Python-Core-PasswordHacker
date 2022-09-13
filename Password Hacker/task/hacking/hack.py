@@ -3,7 +3,7 @@ import socket
 import itertools
 import string
 
-def next_password():
+def next_password(file):
 
     chars = string.ascii_lowercase + string.digits
 
@@ -16,6 +16,7 @@ def next_password():
 
 def main():
 
+    file = open("passwords.txt", "r")
     args = sys.argv
     if len(args) != 3:
         print("wrong number of arguments")
@@ -24,7 +25,8 @@ def main():
     new_socket = socket.socket()
     new_socket.connect((args[1], int(args[2])))
 
-    iter = next_password()
+
+    iter = next_password(file)
 
     while True:
         password = "".join(next(iter))
@@ -37,6 +39,7 @@ def main():
             print(message.decode())
             break
 
+    file.close()
     new_socket.close()
 
 if __name__ == "__main__":
