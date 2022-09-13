@@ -1,22 +1,26 @@
+import copy
 import sys
 import socket
 import itertools
 import string
+import os
 
 def next_password(file):
 
-    chars = string.ascii_lowercase + string.digits
+    passwords = (line for line in file.read().splitlines())
 
-    for i in range(1, 7):
-        iterator = itertools.product(chars, repeat=i)
-        for combination in iterator:
-            yield combination
+    for password in passwords:
+        for i in range(2**len(password)):
+            temp = list(copy.deepcopy(password))
+
+            # print(temp)
+            yield temp
 
 
 
 def main():
 
-    file = open("passwords.txt", "r")
+    file = open("C:\\Users\\Ansis\\Desktop\\ChemScraper\\Password Hacker\\Password Hacker\\task\\hacking\\passwords.txt", "r")
     args = sys.argv
     if len(args) != 3:
         print("wrong number of arguments")
@@ -30,6 +34,7 @@ def main():
 
     while True:
         password = "".join(next(iter))
+        print(password)
         new_socket.send(password.encode())
         message = new_socket.recv(1024)
         if message.decode() == "Connection success!":
