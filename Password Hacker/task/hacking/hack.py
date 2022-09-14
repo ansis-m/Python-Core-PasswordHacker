@@ -1,10 +1,10 @@
-import copy
 import sys
 import socket
 import itertools
 import string
 import os
 import json
+import time
 
 def next_password():
 
@@ -13,7 +13,6 @@ def next_password():
     while True:
         i += 1
         yield chars[i % len(chars)]
-
 
 
 def next_login(file):
@@ -47,8 +46,10 @@ def get_password(login, new_socket):
     while True:
         dictionary = {"login" : login, "password" : password}
         new_socket.send(json.dumps(dictionary).encode())
+        start = time.perf_counter()
         message = new_socket.recv(1024).decode()
-        if json.loads(message)["result"] == "Exception happened during login":
+        end = time.perf_counter()
+        if end - start > 90000/1000000 :
             temp = password
         elif json.loads(message)["result"] == "Connection success!":
             return password
